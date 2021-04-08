@@ -1,0 +1,50 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.example.lenovo.roadbuddy"
+        minSdkVersion 25
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    //Do not change the below line. Tried already
+    implementation 'com.google.android.gms:play-services-maps:16.1.0'
+    testImplementation 'junit:junit:4.12'
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    //Do not change the below line. Tried already
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation 'com.google.code.gson:gson:2.8.1'
+    implementation 'com.github.joaquimley:faboptions:1.2.0'
+    // Import the BoM for the Firebase platform
+    // Declare the dependency for the Realtime Database library
+    // When NOT using the BoM, you must specify versions in Firebase library dependencies
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:26.8.0')
+
+    // Declare the dependency for the Realtime Database library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-database'
+
+
+
+
+
+
+}

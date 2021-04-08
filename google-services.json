@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "216918432114",
+    "firebase_url": "https://iot-project-1fc52-default-rtdb.firebaseio.com",
+    "project_id": "iot-project-1fc52",
+    "storage_bucket": "iot-project-1fc52.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216918432114:android:06dc8902a4c18fc50ce5eb",
+        "android_client_info": {
+          "package_name": "com.example.lenovo.roadbuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216918432114-4vf2o40shfrar1okhqn2er4igu3lehi9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-CWc0C8zZv6FlTJdaO3XXR5mQREcu4TE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216918432114-4vf2o40shfrar1okhqn2er4igu3lehi9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
