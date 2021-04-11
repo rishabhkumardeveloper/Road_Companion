@@ -12,6 +12,7 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Handler;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +29,8 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,6 +38,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
@@ -178,33 +182,39 @@ public void detectdriving(){
         public Float y;
         public Float z;
         public Integer index;
+        public Double lat;
+        public Double longi;
         public Point() {
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
 
-        public Point(Integer index,Float x, Float y, Float z) {
+        public Point(Integer index,Float x, Float y, Float z,Double lat,Double longi) {
             this.index=index;
             this.x = x;
             this.y = y;
             this.z = z;
+            this.lat=lat;
+            this.longi=longi;
         }
 
 
     }
     Integer t=0;
-    public void writeNewPoint(Integer index,Float x, Float y, Float z) {
-        Point p = new Point(index,x,y,z);
+    public void writeNewPoint(Integer index,Float x, Float y, Float z,Double lat,Double longi) {
+        Point p = new Point(index,x,y,z,lat,longi);
 
         //mDatabase.child("Observations").child(index).setValue(x);
     }
     FirebaseDatabase rootNode;
     DatabaseReference reference;
+    Integer count=0;
+    private FusedLocationProviderClient fusedLocationProviderClient;
     @Override
     public void onSensorChanged(SensorEvent event) {
         //Point user = new Point(name, email);
         rootNode=FirebaseDatabase.getInstance();
         reference=rootNode.getReference("Observations");
-
+        
 
         //mDatabase.child("users").child(userId).setValue(user);
 
@@ -223,9 +233,34 @@ public void detectdriving(){
         linear_acceleration[1] = event.values[1] - gravity[1];
         linear_acceleration[2] = event.values[2] - gravity[2];
         //Get all the values
-        t=t+1;
-        Point p1=new Point(t,linear_acceleration[0],linear_acceleration[1],linear_acceleration[2]);
-        reference.child(t.toString()).setValue(p1);
+        count++;
+
+        fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this);
+        if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.M)
+        {
+            if(getApplicationContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED)
+            {
+                fusedLocationProviderClient.getLastLocation()
+                        .addOnSuccessListener(new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                if(location!=null)
+                                {
+                                    Double lat=location.getLatitude();
+                                    Double longt=location.getLongitude();
+                                    if(count%10==0) {
+                                        t = t + 1;
+                                        Point p1 = new Point(t, linear_acceleration[0], linear_acceleration[1], linear_acceleration[2],lat,longt);
+                                        reference.child(t.toString()).setValue(p1);
+                                    }
+                                }
+                            }
+                        });
+            }
+            else {
+                //requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
+            }
+        }
         float scalarProduct = gravity[0] * linear_acceleration[0] +
                 gravity[1] * linear_acceleration[1] +
                 gravity[2] * linear_acceleration[2];
